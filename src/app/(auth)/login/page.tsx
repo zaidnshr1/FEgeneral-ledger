@@ -48,31 +48,18 @@ export default function LoginPage() {
         refreshToken: data.refreshToken,
       });
 
-      Cookies.set(
-        "genledger-auth-storage",
-        JSON.stringify({
-          state: {
-            accessToken: data.accessToken,
-            refreshToken: data.refreshToken,
-          },
-        }),
-        { expires: 7 },
-      );
+      Cookies.set("session-token", data.accessToken, { expires: 7 });
 
-      const userInfo = await getMe();
-      setUser(userInfo);
+      try {
+        const userInfo = await getMe();
+        setUser(userInfo);
 
-      toast.success("Authentication Success", {
-        description: "Redirecting to system dashboard.",
-      });
-
-      router.push("/dashboard");
-    },
-    onError: (error: AxiosError<{ message?: string }>) => {
-      toast.error("Authentication Failed", {
-        description:
-          error.response?.data?.message || "An unexpected error occurred.",
-      });
+        toast.success("Authentication Success");
+        router.push("/dashboard");
+      } catch (err) {
+        Cookies.remove("session-token");
+        toast.error("Failed to fetch user profile");
+      }
     },
   });
 

@@ -4,23 +4,14 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const authCookie = request.cookies.get("genledger-auth-storage");
+  const authCookie = request.cookies.get("session-token");
 
-  let isAuthenticated = false;
-  if (authCookie) {
-    try {
-      const authData = JSON.parse(authCookie.value);
-      if (authData?.state?.accessToken) {
-        isAuthenticated = true;
-      }
-    } catch (error) {
-      isAuthenticated = false;
-    }
-  }
+  const isAuthenticated = !!authCookie?.value;
 
   const isAuthPage =
     pathname.startsWith("/login") || pathname.startsWith("/register");
   const isDashboardPage = pathname.startsWith("/dashboard");
+
 
   if (isAuthenticated && isAuthPage) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
