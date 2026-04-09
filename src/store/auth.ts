@@ -7,12 +7,10 @@ interface AuthState {
   refreshToken: string | null;
   user: UserInfo | null;
   isAuthenticated: boolean;
-  isHydrated: boolean; 
   setTokens: (
     tokens: Pick<TokenResponse, "accessToken" | "refreshToken">,
   ) => void;
   setUser: (user: UserInfo) => void;
-  setHydrated: (state: boolean) => void;
   logout: () => void;
 }
 
@@ -23,7 +21,6 @@ export const useAuthStore = create<AuthState>()(
       refreshToken: null,
       user: null,
       isAuthenticated: false,
-      isHydrated: false,
       setTokens: (tokens) =>
         set({
           accessToken: tokens.accessToken,
@@ -31,21 +28,19 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: !!tokens.accessToken,
         }),
       setUser: (user) => set({ user }),
-      setHydrated: (state) => set({ isHydrated: state }),
-      logout: () =>
+      logout: () => {
+        document.cookie = "session-token=; Max-Age=0; path=/;";
         set({
           accessToken: null,
           refreshToken: null,
           user: null,
           isAuthenticated: false,
-        }),
+        });
+      },
     }),
     {
       name: "genledger-auth-storage",
       storage: createJSONStorage(() => localStorage),
-      onRehydrateStorage: () => (state) => {
-        state?.setHydrated(true);
-      },
     },
   ),
 );

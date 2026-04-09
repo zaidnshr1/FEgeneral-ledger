@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/auth";
 import Header from "@/components/shared/Header";
 import Sidebar from "@/components/shared/Sidebar";
@@ -11,24 +10,24 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
-  const { isAuthenticated, isHydrated } = useAuthStore();
+  const [mounted, setMounted] = useState(false);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   useEffect(() => {
-    if (isHydrated && !isAuthenticated) {
-      router.replace("/login");
-    }
-  }, [isHydrated, isAuthenticated, router]);
+    setMounted(true);
+  }, []);
 
-  if (!isHydrated) {
+  if (!mounted) {
     return (
       <div className="flex h-screen items-center justify-center bg-slate-50">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
+        <p className="text-sm animate-pulse">Initializing System...</p>
       </div>
     );
   }
 
-  if (!isAuthenticated) return null;
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-100">
