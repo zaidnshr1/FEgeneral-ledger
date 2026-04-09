@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useMutation } from "@tanstack/react-query";
-
+import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -47,6 +47,17 @@ export default function LoginPage() {
         accessToken: data.accessToken,
         refreshToken: data.refreshToken,
       });
+
+      Cookies.set(
+        "genledger-auth-storage",
+        JSON.stringify({
+          state: {
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken,
+          },
+        }),
+        { expires: 7 },
+      );
 
       const userInfo = await getMe();
       setUser(userInfo);
