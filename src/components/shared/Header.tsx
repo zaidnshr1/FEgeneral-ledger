@@ -37,7 +37,7 @@ export default function Header() {
         <div className="text-right">
           <p className="text-sm font-medium">{user?.fullName}</p>
           <p className="text-xs text-slate-500">
-            {user?.role.replace("_", " ")}
+            {user?.role?.replace("_", " ")}
           </p>
         </div>
         <Button
