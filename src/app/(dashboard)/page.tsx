@@ -1,10 +1,24 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function DashboardPage() {
+  const [isMounted, setIsMounted] = useState(false);
   const user = useAuthStore((state) => state.user);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-sm text-slate-500">Loading System...</p>
+      </div>
+    );
+  }
 
   if (!user) {
     return null;
