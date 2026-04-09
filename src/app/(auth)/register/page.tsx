@@ -163,7 +163,7 @@ export default function RegisterPage() {
           >
             {registerMutation.isPending
               ? "Processing..."
-              : "Execute Registration"}
+              : "Registration"}
           </Button>
         </form>
       </Form>

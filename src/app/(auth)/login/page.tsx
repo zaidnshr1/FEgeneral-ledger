@@ -119,7 +119,7 @@ export default function LoginPage() {
             className="w-full rounded-none"
             disabled={loginMutation.isPending}
           >
-            {loginMutation.isPending ? "Authenticating..." : "Execute Login"}
+            {loginMutation.isPending ? "Authenticating..." : "Login"}
           </Button>
         </form>
       </Form>
