@@ -11,42 +11,45 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [mounted, setMounted] = useState(false);
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
+  const logout = useAuthStore((state) => state.logout);
 
+  const [mounted, setMounted] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const user = await getMe();
-        useAuthStore.getState().setUser(user);
-      } catch {
-        useAuthStore.getState().logout();
+        console.log("fetching user...");
+        const userData = await getMe();
+        setUser(userData);
+      } catch (err) {
+        logout();
       } finally {
         setLoadingUser(false);
       }
     };
 
-    const { user } = useAuthStore.getState();
-
     if (!user) {
       fetchUser();
     } else {
+      console.log("user:", user);
+      console.log("loadingUser:", loadingUser);
       setLoadingUser(false);
     }
-  }, []);
+  }, [user, setUser, logout]);
 
-  if (!mounted) {
+  if (!mounted || loadingUser) {
     return (
       <div className="flex h-screen items-center justify-center bg-slate-50">
         <p className="text-sm animate-pulse">Initializing System...</p>
       </div>
     );
-  }
-
-  if (!isAuthenticated) {
-    return null;
   }
 
   return (
