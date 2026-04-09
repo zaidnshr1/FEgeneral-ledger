@@ -30,24 +30,28 @@ export default function DashboardLayout({
         setUser(userData);
       } catch (err) {
         logout();
-      } finally {
-        setLoadingUser(false);
       }
     };
 
-    if (!user) {
-      fetchUser();
-    } else {
-      console.log("user:", user);
-      console.log("loadingUser:", loadingUser);
+    fetchUser().finally(() => {
       setLoadingUser(false);
-    }
-  }, [user, setUser, logout]);
+    });
+  }, [setUser, logout]);
 
+  // ✅ 1. tunggu hydration + fetch selesai
   if (!mounted || loadingUser) {
     return (
       <div className="flex h-screen items-center justify-center bg-slate-50">
         <p className="text-sm animate-pulse">Initializing System...</p>
+      </div>
+    );
+  }
+
+  // ✅ 2. cek user setelah semuanya siap
+  if (!user) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p className="text-sm text-red-500">Session invalid. Redirecting...</p>
       </div>
     );
   }
