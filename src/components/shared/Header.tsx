@@ -3,23 +3,27 @@
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/auth";
 import { Button } from "@/components/ui/button";
-import { useToast } from "../ui/use-toast";
+import { toast } from "sonner";
 
 export default function Header() {
   const router = useRouter();
-  const { toast } = useToast();
   const { user, logout } = useAuthStore((state) => ({
     user: state.user,
     logout: state.logout,
   }));
 
-  const handleLogout = () => {
-    logout();
-    toast({
-      title: "Logout Success",
-      description: "You have been successfully logged out.",
-    });
-    router.push("/login");
+  const handleLogout = async () => {
+    try {
+      await logout();
+
+      toast.success("Logout Success", {
+        description: "You have been successfully logged out.",
+      });
+
+      router.push("/login");
+    } catch (error) {
+      toast.error("Logout Failed");
+    }
   };
 
   return (
