@@ -88,6 +88,7 @@ export default function LoginPage() {
                     placeholder="admin.pusat"
                     {...field}
                     className="rounded-none"
+                    autoComplete="username"
                   />
                 </FormControl>
                 <FormMessage />
@@ -106,6 +107,7 @@ export default function LoginPage() {
                     placeholder="••••••••"
                     {...field}
                     className="rounded-none"
+                    autoComplete="current-password"
                   />
                 </FormControl>
                 <FormMessage />

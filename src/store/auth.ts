@@ -27,7 +27,11 @@ export const useAuthStore = create<AuthState>()(
           refreshToken: tokens.refreshToken,
           isAuthenticated: !!tokens.accessToken,
         }),
-      setUser: (user) => set({ user }),
+      setUser: (user) =>
+        set({
+          user,
+          isAuthenticated: !!user,
+        }),
       logout: () => {
         document.cookie = "session-token=; Max-Age=0; path=/;";
         set({
@@ -41,6 +45,12 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "genledger-auth-storage",
       storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
+        user: state.user,
+        isAuthenticated: state.isAuthenticated,
+      }),
     },
   ),
 );

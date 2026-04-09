@@ -21,7 +21,11 @@ export default function DashboardPage() {
   }
 
   if (!user) {
-    return null;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-sm text-slate-500">Fetching user...</p>
+      </div>
+    );
   }
 
   return (
