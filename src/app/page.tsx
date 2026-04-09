@@ -1,6 +1,5 @@
-// src/app/page.tsx
 import Link from "next/link";
-import { Button } from "@/components/ui/button"; // Asumsi shadcn/ui sudah di-setup
+import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
   return (
